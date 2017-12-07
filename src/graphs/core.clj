@@ -1,13 +1,20 @@
-(ns graphs.core
-  (:require [graphs.data :refer [Graph Edge Vertex]]
-            [graphs.example]))
+(ns graphs.core)
+
+(defrecord Graph [id vertices edges])
+
+(defrecord Edge [in out])
+
+(defrecord Vertex [id data])
 
 (defn add-vertex [graph vertex]
-  (Graph. (:id graph)
-          (conj (:vertices graph) vertex)
-          (:edges graph)))
+  (let [existing-vertices (:vertices graph)]
+    (assoc graph :vertices (conj existing-vertices vertex))))
 
 (defn add-edge [graph edge]
-  (Graph. (:id graph)
-          (:vertices graph)
-          (conj (:edges graph) edge)))
+  (let [existing-edges (:edges graph)]
+    (assoc graph :edges (conj existing-edges edge))))
+
+(defn vertex-exists [graph id]
+  (= 0 (count
+        (filter #(= id (:id %))
+                (:vertices graph)))))
